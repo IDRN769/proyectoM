@@ -41,8 +41,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 'data': 'id'
             },
             {
+                'data': 'imagen'
+            },
+            {
                 'data': 'codigo'
             },
+
             {
                 'data': 'descripcion'
             },
@@ -286,6 +290,7 @@ function frmProducto() {
     document.getElementById("frmProducto").reset();
     document.getElementById("id").value = "";
     $("#nuevo_producto").modal("show");
+    deleteImg();
 }
 function registrarPro(e) {
     e.preventDefault();
@@ -314,7 +319,7 @@ function registrarPro(e) {
                 const res = JSON.parse(this.responseText);
                 if (res == "si") {
                     Swal.fire({
-                         icon: 'success',
+                        icon: 'success',
                         title: 'Producto registrado',
                         showConfirmButton: false,
                         timer: 3000
@@ -364,6 +369,13 @@ function btnEditarPro(id) {
             document.getElementById("stock").value = res.cantidad;
             document.getElementById("medida").value = res.id_medida;
             document.getElementById("categoria").value = res.id_categoria;
+            document.getElementById("img-preview").src = base_url + 'Assets/img/' + res.foto;
+            document.getElementById("icon-cerrar").innerHTML = `
+            <button class="btn btn-danger" onclick="deleteImg()">
+            <i class = "fas fa-times"></i></button>`;
+            document.getElementById("icon-image").classList.add("d-none");
+            document.getElementById("foto_actual").value = res.foto;
+            document.getElementById("foto_delete").value = res.foto;
             $("#nuevo_producto").modal("show");
         }
     }
@@ -751,6 +763,25 @@ function productosVendidos() {
     }
 }
 
+//Empieza la modificación del código
+function preview(e) {
+    const url = e.target.files[0];
+    const urlTemp = URL.createObjectURL(url);
+    document.getElementById("img-preview").src = urlTemp;
+    document.getElementById("icon-image").classList.add("d-none");
+    document.getElementById("icon-cerrar").innerHTML = `
+    <button class="btn btn-danger" onclick="deleteImg()"><i class = "fas fa-times"></i></button> 
+    ${url['name']}`;
+
+}
+
+function deleteImg() {
+    document.getElementById("icon-cerrar").innerHTML = '';
+    document.getElementById("icon-image").classList.remove("d-none");
+    document.getElementById("img-preview").src = '';
+    document.getElementById("imagen").value = '';
+    document.getElementById("foto_delete").value = '';
+}
 
 
 
